@@ -1,0 +1,39 @@
+#.travis.yml
+
+language: node_js
+
+node_js:
+  - "8.5.0"
+
+cache: yarn
+
+env:
+  - CXX=g++-4.8
+
+addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+    packages:
+      - g++-4.8
+
+branches:
+  only:
+    - master
+
+before_script:
+  - npm install -g @angular/cli
+
+script:
+  - ng test
+  - ng build -prod
+
+after_success:
+  - surge --project ./dist --domain angular2sic.surge.sh
+
+notifications:
+  email:
+    recipients:
+      - khepherer@gmail.com      
+    on_success: always # default: change
+    on_failure: always # default: always
